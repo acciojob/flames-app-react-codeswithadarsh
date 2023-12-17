@@ -1,82 +1,74 @@
-import React, { useState } from 'react';
+import React, { Component, useState, useRef } from "react";
+import "../styles/App.css";
 
-const FlamesApp = () => {
-  const [input1, setInput1] = useState('');
-  const [input2, setInput2] = useState('');
-  const [relationshipStatus, setRelationshipStatus] = useState('');
-  
-  const calculateRelationship = () => {
-    if (!input1 || !input2) {
-      setRelationshipStatus('Please Enter valid input');
-      return;
-    }
+const App = () => {
+  const first = useRef(null);
+  const second = useRef(null);
+  const [status, setstatus] = useState("");
+  const handleStatus = () => {
+    let firstname = first.current.value;
+    let secondname = second.current.value;
+    let totallength = (firstname + secondname).length;
+    let similar = 0;
+    let different = 0;
 
-    // Remove common characters
-    let remaining1 = input1;
-    let remaining2 = input2;
-
-    for (let char of input1) {
-      if (remaining2.includes(char)) {
-        remaining1 = remaining1.replace(char, '');
-        remaining2 = remaining2.replace(char, '');
+    for (let i = 0; i < firstname.length; i++) {
+      if (secondname[i] === firstname[i]) {
+        similar++;
+      } else {
+        different++;
       }
     }
-
-    const totalLength = (remaining1.length + remaining2.length) % 6;
-
-    switch (totalLength) {
+    const output = (totallength - similar) % 6;
+    let result = "";
+    switch (output) {
+      case 0:
+        result = "Siblings";
+        break;
       case 1:
-        setRelationshipStatus('Friends');
+        result = "Friends";
         break;
       case 2:
-        setRelationshipStatus('Love');
+        result = "Love";
         break;
       case 3:
-        setRelationshipStatus('Affection');
+        result = "Affection";
         break;
       case 4:
-        setRelationshipStatus('Marriage');
+        result = "Marriage";
         break;
       case 5:
-        setRelationshipStatus('Enemy');
-        break;
-      case 0:
-        setRelationshipStatus('Siblings');
+        result = "Enemy";
         break;
       default:
-        setRelationshipStatus('');
+        result = "";
     }
+    setstatus(result);
   };
-
-  const clearInputs = () => {
-    setInput1('');
-    setInput2('');
-    setRelationshipStatus('');
-  };
-
   return (
-    <div>
-      <input
-        type="text"
-        value={input1}
-        onChange={(e) => setInput1(e.target.value)}
-        data-testid="input1"
-      />
-      <input
-        type="text"
-        value={input2}
-        onChange={(e) => setInput2(e.target.value)}
-        data-testid="input2"
-      />
-      <button onClick={calculateRelationship} data-testid="calculate_relationship">
+    <div id="main">
+      {/* Do not remove the main div */}
+      <input type="text" ref={first} id="fname" data-testid="input1" />
+      <input type="text" ref={second} id="lname" data-testid="input2" />
+      <button
+        type="button"
+        data-testid="calculate_relationship"
+        onClick={handleStatus}
+      >
         Calculate Relationship Future
       </button>
-      <button onClick={clearInputs} data-testid="clear">
-        Clear
+      <button
+        type="button"
+        data-testid="clear"
+        onClick={() => {
+          setstatus("");
+        }}
+      >
+        Clear inputs and relationship status
       </button>
-      <h3 data-testid="answer">{relationshipStatus}</h3>
+      <h3 data-testid="answer">{status}</h3>
     </div>
   );
 };
 
-export default FlamesApp;
+export default App;
