@@ -1,4 +1,5 @@
 import React, {Component, useState} from "react";
+import FlamesApp from "./FlamesApp";
 import '../styles/App.css';
 
 class App extends Component {
@@ -6,7 +7,7 @@ class App extends Component {
 
         return(
             <div id="main">
-               {/* Do not remove the main div */}
+              <FlamesApp/>
             </div>
         )
     }
